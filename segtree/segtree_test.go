@@ -1,6 +1,7 @@
 package segtree
 
 import (
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,6 +13,17 @@ func add(a, b int) int {
 
 func addId() int {
 	return 0
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func minId() int {
+	return math.MaxInt64
 }
 
 func TestSegTree_OutofIndex(t *testing.T) {
@@ -65,4 +77,18 @@ func TestSegTree_Values(t *testing.T) {
 	assert.Equal(t, 100, seg.Prod(0, 1234))
 	assert.Equal(t, 32000, seg.Prod(1, 10000))
 	assert.Equal(t, 30000, seg.Prod(1235, 10000))
+}
+
+func TestSegTree_ValuesMin(t *testing.T) {
+	n := 10000
+	seg := NewSegTree(n, min, minId)
+
+	seg.Set(0, 100)
+	seg.Set(1234, 2000)
+	seg.Set(9999, 30000)
+
+	assert.Equal(t, 100, seg.Prod(0, 10000))
+	assert.Equal(t, 2000, seg.Prod(1, 10000))
+	assert.Equal(t, 30000, seg.Prod(1235, 10000))
+	assert.Equal(t, 100, seg.Prod(0, 1234))
 }

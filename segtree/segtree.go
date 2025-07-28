@@ -19,7 +19,14 @@ func NewSegTree[T any](n int, op func(a, b T) T, e func() T) SegTree[T] {
 	}
 
 	size := 1 << bitLen(n-1)
-	return SegTree[T]{n, size, op, e, make([]T, size*2)}
+
+	seg := SegTree[T]{n, size, op, e, make([]T, size*2)}
+
+	for i := 0; i < seg.n; i++ {
+		seg.Set(i, seg.e())
+	}
+
+	return seg
 }
 
 func (s *SegTree[T]) Set(p int, x T) {
